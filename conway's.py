@@ -274,3 +274,6 @@ print(f"Average display speed: {avgspeed} seconds / {round(1/avgspeed)} FPS")
 
 turtle.done()
 turtle.exitonclick()
+
+# TODO 1: relocate spawner to another file (optional)
+# TODO 2: do display though pygame
