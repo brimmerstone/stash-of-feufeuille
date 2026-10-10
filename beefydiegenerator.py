@@ -2,7 +2,7 @@ from random import choice
 from string import ascii_uppercase
 
 letters = [i for i in ascii_uppercase]
-tingles = "SHIT FUCK DAMN OMFG CUNT LMAO ACAB BFDI"
+tingles = "SHIT FUCK DAMN OMFG LMAO ACAB BFDI LGBT YOLO"
 # its gonna take a lot to list all of the known 4 letter words and abbreviations
 # so im gonna use a select few
 gadzooks = [i for i in tingles.split()]
