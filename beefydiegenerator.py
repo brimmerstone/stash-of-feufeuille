@@ -3,7 +3,7 @@ from string import ascii_uppercase
 
 letters = [i for i in ascii_uppercase]
 tingles = "SHIT FUCK DAMN OMFG LMAO ACAB BFDI LGBT YOLO"
-# its gonna take a lot to list all of the known 4 letter words and abbreviations
+# its gonna take a lot to list all of the known 4 letter words and abbreviations, and i will get bored or cringe at some point
 # so im gonna use a select few
 gadzooks = [i for i in tingles.split()]
 tickmarx = [0 for i in gadzooks]
