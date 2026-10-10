@@ -1,0 +1,146 @@
+<html>
+    <head>
+        <style>
+            body {margin:0;}
+        </style>
+    </head>
+    <body>
+        <canvas id="game"></canvas>
+
+        <script>
+            let game = document.getElementById('game')
+            game.width = window.innerWidth;
+            game.height = window.innerHeight;
+            let ctx = game.getContext('2d');
+
+            let cX = game.width/2-25;
+            let cY = game.height-350;
+            let GM = true;
+
+            let bullets = []
+            let bulletSpeed = 15;
+            let bulletSpawn = 15;
+
+            let veloX = 0;
+            let accel = 0.6;    
+            let friction = 0.85;
+            let maxSpeed = 8;
+
+            let jump = false;
+            const initG = 20;
+            let gravity = initG;
+
+            let keys = {};
+            window.addEventListener("keydown", (e) => {
+                keys[e.key] = true;
+            });
+            window.addEventListener("keyup", (e) => {
+                keys[e.key] = false;
+            });
+
+            function spawnBullet() {
+                if (Math.random() < 1 / bulletSpawn) {
+                    bullets.push({x:Math.random()*game.width,y:-50});
+              }
+            }
+
+            function gmLogic() {
+                if (keys["ArrowLeft"] || keys["a"])  veloX -= accel;
+                if (keys["ArrowRight"] || keys["d"]) veloX += accel;
+                
+                veloX = Math.max(-maxSpeed, Math.min(maxSpeed, veloX));
+
+                if (!(keys["ArrowLeft"] || keys["a"] || keys["ArrowRight"] || keys["d"])) {
+                    veloX *= friction;
+                    if (Math.abs(veloX) < 0.1) veloX = 0;
+                }
+
+                cX += veloX;
+                cX = Math.max(0, Math.min(game.width - 50, cX));
+
+                if ((keys["ArrowUp"] || keys["w"]) && !jump ) {
+                    jump = true;
+                }
+                
+                if ((keys["ArrowDown"] || keys["s"]) && jump ) {
+                    cY -= gravity;
+                    gravity--;
+                    if (cY>game.height-350) {
+                        cY = Math.min(game.height-350,cY);
+                        gravity = initG;
+                        jump = false;
+                    }
+                }
+
+                if (jump) {
+                    cY -= gravity;
+                    gravity--;
+                    if (cY>game.height-350) {
+                        cY = Math.min(game.height-350,cY);
+                        gravity = initG;
+                        jump = false;
+                    }
+                }
+
+                spawnBullet();
+
+                for (let i = bullets.length - 1; i >= 0; i--) {
+                    const bullet = bullets[i];
+                    bullets[i].y += bulletSpeed;
+
+                    if (bullet.x < cX + 50 && bullet.x + 10 > cX && bullet.y < cY + 50 && bullet.y + 25 > cY) {
+                        alert("Game Over");
+                        gmRestart();
+                        return;
+                    }
+
+                    if (bullets[i].y > game.height-300) {
+                        bullets.splice(i, 1);
+                    }
+                }
+
+                
+            }
+
+            function gmDraw() {
+                ctx.clearRect(0,0,game.width,game.height);
+
+                ctx.fillStyle = 'skyblue';
+                ctx.fillRect(0,0,game.width,game.height);
+
+                ctx.fillStyle = 'green';
+                ctx.fillRect(0,game.height-300,game.width,300);
+                ctx.fillStyle = 'brown';
+                ctx.fillRect(0,game.height-200,game.width,200);
+                ctx.fillStyle = 'maroon';
+                ctx.fillRect(0,game.height-100,game.width,100);
+
+                ctx.fillStyle = 'navy';
+                bullets.forEach(bullet => {
+                  ctx.fillRect(bullet.x,bullet.y,10,25);
+                });
+
+                ctx.fillStyle = 'dodgerblue';
+                ctx.fillRect(cX,cY,50,50);
+            }
+
+            function gmLoop() {
+              gmLogic();
+              gmDraw();
+              requestAnimationFrame(gmLoop);
+            }
+            gmLoop();
+
+            function gmRestart() {
+                bullets = [];
+                cX = game.width/2 - 25;
+                cY = game.height - 350;
+                veloX = 0;
+                gravity = initG;
+                jump = false;
+                keys = {};
+            }
+
+        </script>
+    </body>
+</html>

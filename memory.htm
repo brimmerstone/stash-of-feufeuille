@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <title></title>
+        <style>
+            body {margin:0;display:flex;justify-content:center;align-items:center;font-family:sans-serif;}
+            .main {display:flex;flex-direction:column;width:40%;}
+            .row {display:flex;align-items:center;justify-content:space-around;margin:10px;}
+            .tile {width:100px;height:100px;background-color:silver;border:1px solid gray;border-radius:10px;cursor:pointer;}
+
+        </style>
+    </head> 
+    <body>
+        <div class="main">
+            <div class="title">
+                <h2>MEMORY GAME</h2>
+            </div>
+            <div class="row">
+                <button onclick="tileClick(this)" class="tile" id="t1"></button>
+                <button onclick="tileClick(this)" class="tile" id="t2"></button>
+                <button onclick="tileClick(this)" class="tile" id="t3"></button>
+                <button onclick="tileClick(this)" class="tile" id="t4"></button>
+                <button onclick="tileClick(this)" class="tile" id="t5"></button>
+                <button onclick="tileClick(this)" class="tile" id="t6"></button>
+            </div>
+            <div class="row">
+                <button onclick="tileClick(this)" class="tile" id="t7"></button>
+                <button onclick="tileClick(this)" class="tile" id="t8"></button>
+                <button onclick="tileClick(this)" class="tile" id="t9"></button>
+                <button onclick="tileClick(this)" class="tile" id="t10"></button>
+                <button onclick="tileClick(this)" class="tile" id="t11"></button>
+                <button onclick="tileClick(this)" class="tile" id="t12"></button>
+            </div>
+            <div class="row">
+                <button onclick="tileClick(this)" class="tile" id="t13"></button>
+                <button onclick="tileClick(this)" class="tile" id="t14"></button>
+                <button onclick="tileClick(this)" class="tile" id="t15"></button>
+                <button onclick="tileClick(this)" class="tile" id="t16"></button>
+                <button onclick="tileClick(this)" class="tile" id="t17"></button>
+                <button onclick="tileClick(this)" class="tile" id="t18"></button>
+            </div>
+            <div class="row">
+                <button onclick="tileClick(this)" class="tile" id="t19"></button>
+                <button onclick="tileClick(this)" class="tile" id="t20"></button>
+                <button onclick="tileClick(this)" class="tile" id="t21"></button>
+                <button onclick="tileClick(this)" class="tile" id="t22"></button>
+                <button onclick="tileClick(this)" class="tile" id="t23"></button>
+                <button onclick="tileClick(this)" class="tile" id="t24"></button>
+            </div>
+            <h2>Moves:       <span id='moves'>0</span>
+            <br>Pairs:       <span id='pairs'>0</span>
+            <br>Wrong moves: <span id='wrong'>0</span>
+            <br>Accuracy:    <span id='accur'>0</span>%
+            <br>Time:        <span id='timer'>0</span>s</h2>
+        </div>
+
+        <script>
+            let tiles = Array.from(document.getElementsByClassName('tile'));
+            let colors = ['red','red','orange','orange','yellow','yellow','green','green',
+                        'teal','teal','cyan','cyan','blue','blue','purple','purple',
+                        'magenta','magenta','pink','pink','tan','tan','brown','brown'];
+            let colorid;
+            tiles.forEach(tile => {
+                colorid = Math.floor(Math.random()*colors.length);
+                tile.style.color = colors[colorid];
+                colors.splice(colorid,1);
+            })
+
+            let moves = 0;
+            let wrongmoves = 0;
+            let correctmoves = 0;
+            let accuracy = 0;
+
+            let running = false;
+            let time = 0;
+            let run;
+
+            let tile1shown = false;
+            let tile1;
+            let cooldown = false;
+            function tileClick(tile) {
+                if (cooldown) return;
+
+                if (!running){
+                    running = true;
+                    run = setInterval(() => {
+                    time = time+100;
+                    document.getElementById('timer').textContent = time/1000;
+                },100)
+                }
+
+                tile.style.backgroundColor = tile.style.color;
+                if (tile1shown && tile!=tile1) {
+                    moves++;
+                    document.getElementById('moves').textContent = moves;
+                    cooldown = true;
+                    if (tile1.style.color != tile.style.color) {
+                        wrongmoves++;
+                        document.getElementById('wrong').textContent = wrongmoves;
+                        accuracy = Math.round(correctmoves/moves*100);
+                        document.getElementById('accur').textContent = accuracy;
+                        setTimeout(() => {
+                            tile1.style.backgroundColor = 'silver';
+                            tile.style.backgroundColor = 'silver';
+                            tile1shown = false;
+                            tile1 = undefined;
+                            cooldown = false;
+                        },500) 
+                    }
+                    else {
+                        correctmoves++;
+                        document.getElementById('pairs').textContent = correctmoves;
+                        accuracy = Math.round(correctmoves/moves*100);
+                        document.getElementById('accur').textContent = accuracy;
+                        tile1shown = false;
+                        tile1 = undefined;
+                        cooldown = false;
+                        if (correctmoves==12) {
+                            running = false;
+                            clearInterval(run);
+                        }
+                    }
+                }
+                else {
+                    tile1 = tile;
+                    tile1shown = true;
+                }
+            }
+
+        </script>
+    </body>
+</html>

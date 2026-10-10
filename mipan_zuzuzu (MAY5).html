@@ -1,0 +1,117 @@
+<html>
+    <head>
+        <style>
+            body {display:flex;justify-content:space-between;align-items:center;}
+            body > * {border-radius:10px;}
+            .toolbar {width:19%;height:100%;border:2px solid silver;
+                display:flex;flex-direction:column;align-items:center;justify-content:center;}
+            .canvadiv {width:80%;height:100%;border:2px solid silver;}
+            
+            .toolbar > * {margin-top:10px;}
+            .toolbar button {font-size:x-large;width:60%;height:75px;background-color:dodgerblue;border-radius:10px;transition:0.25s ease-in;}
+            .toolbar button:hover {filter:brightness(1.15);cursor:pointer;}
+            
+            #switchedtool {background-color:#E080A0;}
+            #clear {background-color:coral;}
+
+        </style>
+    </head>
+    <body>
+
+        <div class="toolbar">
+            <button onclick="SwitchTool()" id="switchedtool">Switch to Eraser</span></button>
+            <button onclick="CanvaClear()" id="clear">CLEAR</button>
+            <div class="brushsizediv">
+                <input id="brushinput" type="range" min="1" max="100" value="15">
+                <span id="tool">Brush</span> size: <span id="brushsize">15</span>
+            </div>
+            <div class="palette">
+                <input id="colorinput" type="color">
+            </div>
+
+        </div>
+        <div class="canvadiv" id="canvadiv">
+            <canvas id="canva"></canvas>
+        </div>
+        
+        <script>
+            let canva = document.getElementById('canva');
+            canva.width =  document.getElementById('canvadiv').offsetWidth;
+            canva.height = document.getElementById('canvadiv').offsetHeight;
+            let ctx = canva.getContext('2d');
+
+            const brushinput = document.getElementById('brushinput');
+            brushSize = 15;
+            brushinput.oninput = function() {
+                brushSize = this.value;
+                document.getElementById('brushsize').textContent = this.value; 
+            }
+
+            let DRAW = false;
+            let brushTool = true;
+            let eraserTool = false;
+            let color = '#000000';
+
+            document.getElementById('colorinput').addEventListener('input', (event) => {
+                color = event.target.value;
+            });
+
+            ctx.globalCompositeOperation = 'source-over';
+
+            canva.addEventListener('mousedown', function() {
+                DRAW = true;
+            })
+            canva.addEventListener('mouseup', function() {
+                DRAW = false;
+            })
+            canva.addEventListener("mouseleave", function() {
+                DRAW = false;
+            })
+
+            canva.addEventListener("mousemove", function(event) {
+            if (!DRAW) return;
+
+            const x = event.offsetX;
+            const y = event.offsetY;
+        
+            if (brushTool) {
+                ctx.fillStyle = color; 
+            }
+
+            ctx.beginPath();
+            ctx.arc(x,y,brushSize,0,Math.PI*2);
+            ctx.fill();
+ 
+            });
+
+            function CanvaClear() {
+                if (confirm("Confirm to clear?")) {
+                    ctx.clearRect(0,0,canva.width,canva.height);
+                }
+                
+            }
+
+            function SwitchTool() {
+                if (brushTool) {
+                    eraserTool = true;
+                    ctx.globalCompositeOperation = 'destination-out';
+                    brushTool = false;
+                    document.getElementById('tool').textContent = 'Eraser';
+                    document.getElementById('switchedtool').style.backgroundColor = "#D0A080";
+                    document.getElementById('switchedtool').textContent = 'Switch to Brush';
+                    return;
+                }
+                if (eraserTool) {
+                    brushTool = true;
+                    ctx.globalCompositeOperation = 'source-over';
+                    eraserTool = false;
+                    document.getElementById('tool').textContent = 'Brush';
+                    document.getElementById('switchedtool').style.backgroundColor='#E080A0';
+                    document.getElementById('switchedtool').textContent = 'Switch to Eraser';
+                    return;
+                }
+
+            }
+        </script>
+    </body>
+</html>
