@@ -12,7 +12,7 @@ from string import ascii_uppercase
 vals = [i for i in ascii_uppercase + '0123456789' + " '-.,:!?"]
 n = len(vals)
 
-# column - preceding letters (R21-C17 = QU / C17 - Q / R21 - U
+# column - preceding letters (R21-C17) = QU / C17 - Q / R21 - U
 # row - following letters
 
 while True:

@@ -9,7 +9,7 @@ gadzooks = [i for i in tingles.split()]
 tickmarx = [0 for i in gadzooks]
 
 att = 0
-maxatt = 1000000
+maxatt = 100000
 for i in range(maxatt):
     string = ''
     for i in range(4):

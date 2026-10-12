@@ -150,7 +150,7 @@ scrWd, scrLn = tile*Wd, tile*Ln
 t.teleport(-scrWd/2,scrLn/2)
 t.pensize(2)
 
-DISPLAY_DEBUG = 1
+DISPLAY_DEBUG = 0
 SECRET_PARTY  = 0
 
 if DISPLAY_DEBUG:
