@@ -1,19 +1,20 @@
 from golrules import*
 from random import randint,choice
 
-def place(x=None,y=None,map=gmmap):
+def place(x=None,y=None,map=gmap):
+
     if x is None:
-        if map == gmmapT:
+        if map == mapT:
             x = randint(0, WdT)
         else:
             x = randint(0,Wd)
     if y is None:
-        if map == gmmapT:
+        if map == mapT:
             y = randint(0, LnT)
         else:
             y = randint(0,Ln)
 
-    if map == gmmapT:
+    if map == mapT:
         map[y%LnT][x%WdT] = 1
         return map[y%LnT][x%WdT]
     else:

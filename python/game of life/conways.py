@@ -10,7 +10,7 @@ from spawner import place
 # SPAWN
 
 for _ in range(int(round(WdT*LnT/4))):
-    place(None,None,gmmapT)
+    place(None,None,mapT)
 
 # DISPLAY PART
 
@@ -29,8 +29,7 @@ scrWd, scrLn = tile*WdT, tile*LnT
 t.teleport(-scrWd/2,scrLn/2)
 t.pensize(2)
 
-DISPLAY_DEBUG = 0
-SECRET_PARTY  = 0
+cords = [[],[]]
 
 if DISPLAY_DEBUG:
     avgspeed = 0
@@ -57,7 +56,12 @@ def Disp():
 
     for y in range(LnT):
         for x in range(WdT):
-            if gmmapT[y][x] == 1:
+            if x == 1:
+                cords[0].append((t.pos()))
+            elif x == 2:
+                cords[1].append((t.pos()))
+
+            if mapT[y][x] == 1:
                 colTile(gencolor)
             t.teleport(t.pos()[0]+tile,t.pos()[1])
         pY = t.ycor()
@@ -72,13 +76,39 @@ def Disp():
         t.forward(scrLn)
         t.right(90)
 
+    if gen == 1:
+        print(cords[0])
+        print(cords[1])
+        print(-scrWd/2,scrLn/2)
+
     t.teleport(0,scrLn/2+50)
-    live = len([_ for R in gmmapT for _ in R if _ == 1])
+    live = len([_ for R in mapT for _ in R if _ == 1])
     t.write(str(f"{gen} | {live}"),align="center",font=("Lucida Console",32,"bold"))
     scr.update()
 
+# CURSOR INTERACTION
+
+def tileclick(x,y):
+    global mapT,scrWd,scrLn
+
+    if x < -scrWd/2 or x > scrWd/2 or y < -scrLn/2 or y > scrLn/2:
+        return
+    else:
+        crX = -scrWd/2
+        crY = scrLn/2
+        Xt = 0
+        Yt = 0
+        while crX <= x:
+            crX += tile
+            Xt += 1
+        while crY <= y:
+            crY += tile
+            Yt += 1
+        place(Xt,Yt,mapT)
+
 # SIMULATION PART
 
+scr.onscreenclick(tileclick)
 Disp()
 prd1, prd2 = [], [] # these lists are used to break the cycle in case period-2 oscillators remain
 
@@ -92,14 +122,14 @@ while True:
         for x in range(WdT):
             alive=0
             for nb in neighbors:
-                grid = gmmapT[(y+nb[0])%LnT][(x+nb[1])%WdT]
+                grid = mapT[(y+nb[0])%LnT][(x+nb[1])%WdT]
                 alive += grid
-            nbmapT[y][x] = alive
+            nmapT[y][x] = alive
 
     for y in range(LnT):
         for x in range(WdT):
-            if gmmapT[y][x]==0 and nbmapT[y][x] in rules["B"]:
-                gmmapT[y][x]=1
+            if mapT[y][x]==0 and nmapT[y][x] in rules["B"]:
+                mapT[y][x]=1
                 changes += 1
                 if gen%3 == 0:
                     prd1.append((y,x))
@@ -107,13 +137,13 @@ while True:
                     prd2.append((y,x))
 
 
-            elif gmmapT[y][x]==1 and nbmapT[y][x] not in rules["S"]:
-                gmmapT[y][x]=0
+            elif mapT[y][x]==1 and nmapT[y][x] not in rules["S"]:
+                mapT[y][x]=0
                 changes += 1
 
     stagnant = True
     for y in range(LnT):
-        if 1 in gmmapT[y]:
+        if 1 in mapT[y]:
             stagnant = False
             break
 
