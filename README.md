@@ -1,6 +1,4 @@
 # stash-of-feufeuille
 ### collection of random mess created by the person with five names aka brimmerstone aka feufeuille aka fl brimmer aka æ. ә. gandha
 
-you can try them out, that's why it's on public
-- stuff like these have been created a million times already so i dont mind if someone steals them, unless you take my credits
-- after all it's just for showcasing my own coding skills
+of course you can try them out, that's why it's on public, after all it's just for showcasing my own coding skills
