@@ -1,14 +1,15 @@
 from random import randint,choice
 
-abc_ord = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-qwe_ord = "QWERTYUIOPASDFGHJKLZXCVBNM"
-dvo_ord = "PYFGCRLAOEUIDHTNSQJKXBMWVZ"
-col_ord = "QWFPGJLUYARSTDHNEIOZXCVBKM"
+abc_ord  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+qwerty   = "QWERTYUIOPASDFGHJKLZXCVBNM"
+qwevert  = "QAZWSXEDCRFVTGBYHNUJMIKOLP"
+dvorak   = "PYFGCRLAOEUIDHTNSQJKXBMWVZ"
+colemak  = "QWFPGJLUYARSTDHNEIOZXCVBKM"
+linotype = "ETAOINSHRDLUCMFWYPVBGKQJXZ"
 
-orders = [abc_ord,qwe_ord,dvo_ord,col_ord]
+orders = [abc_ord,qwerty,dvorak,colemak,qwevert,linotype]
 
 def shift(text:str,n:int,order:str=None):
-
     if order is None:
         order = orders[0]
     else:
@@ -19,6 +20,10 @@ def shift(text:str,n:int,order:str=None):
                 order = orders[2]
             case "C" | "COL" | "COLEMAK":
                 order = orders[3]
+            case "QV" | "QWEVERT":
+                order = orders[4]
+            case "L" | "LINOTYPE" | "ETAOIN":
+                order = orders[5]
             case "A" | "ABC" | "ALPHABET" | _:
                 order = orders[0]
 
@@ -40,24 +45,24 @@ gen = 10
 logs = []
 for i in range(gen):
     nth = randint(1,25)
-    ord = choice(["A","Q","D","C"])
+    ord = choice(["A","Q","D","C","QV","L"])
     logs.append((ord,nth))
     txt = shift(txt,nth,ord)
-    print(f"O: {txt}")
+    print(f"{i}: {txt} {logs[-1]}")
 print(logs)
 
 ziplog = []
-cur = logs[i][0]
-cval = logs[i][1]
+cur = logs[0][0]
+cval = logs[0][1]
 
 for i in logs[1:]:
     if cur == i[0]:
         cval += i[1]
     else:
-        ziplog.append((cur,cval))
+        if cval%26 > 0:
+            ziplog.append((cur,cval%26))
         cur = i[0]
         cval = i[1]
-    ziplog.append((cur,cval))
+if cval%26 > 0:
+    ziplog.append((cur,cval%26))
 print(ziplog)
-
-# print("O: "+rotate(txt,13)) # ROT13
