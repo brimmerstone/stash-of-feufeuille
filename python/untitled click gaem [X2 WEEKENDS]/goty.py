@@ -1,5 +1,10 @@
 from tkinter import*
 from random import randint,choice
+from datetime import datetime
+
+pt = 1
+if datetime.now().strftime("%a") in ("Sat","Sun"):
+    pt = 2
 
 wid=600;hei=600;edge=80
 
@@ -45,7 +50,7 @@ def set():
 
 def click():
     global score,fnc,start
-    score+=1
+    score+=pt
     start=True
     set()
     if fnc:
